@@ -22,6 +22,7 @@ from matplotlib import pyplot as plt
 
 from xsgen.utils import indir, NotSpecified
 from xsgen.tape9 import brightlitetape9
+from pyne.xs import models
 
 # templates are from openmc/examples/lattice/simple
 
@@ -380,6 +381,9 @@ class OpenMCOrigen(object):
         """
         if self.rc.verbose:
             print("making tape9 for {0} with phi={1}".format(state, phi_tot))
+        num_den = models.number_density(self.libs['fuel']['material'][0].comp, self.rc.fuel_density, self.libs['fuel']['material'][0].mass)
+        for ds in self.xscache.data_sources:
+            ds.shield_weights(num_den, self.rc.temperature)
         self.tape9 = origen22.make_tape9(self.rc.track_nucs, self.xscache, nlb=(219, 220, 221))
         self.tape9 = origen22.merge_tape9((self.tape9,
                                           origen22.loads_tape9(brightlitetape9)))
