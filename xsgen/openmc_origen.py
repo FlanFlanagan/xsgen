@@ -384,7 +384,6 @@ class OpenMCOrigen(object):
         self.libs['fuel']['material'][-1].density = 10.7
         self.libs['fuel']['material'][-1].atoms_per_molecule = 3.0
         num_den = self.libs['fuel']['material'][-1].to_atom_dens()
-        print(num_den)
         for ds in self.xscache.data_sources:
             ds.shield_weights(num_den, self.rc.temperature)
         self.tape9 = origen22.make_tape9(self.rc.track_nucs, self.xscache, nlb=(219, 220, 221))
