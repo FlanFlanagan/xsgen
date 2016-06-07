@@ -123,6 +123,13 @@ TALLIES_TEMPLATE = """<?xml version="1.0"?>
     <scores>scatter</scores>
     <nuclides>total</nuclides>
   </tally>
+  <tally id="5">
+    <label>fission</label>
+    <filter type="energy" bins="{_omcds_egrid}" />
+    <filter type="material" bins="1" />    
+    <nuclides>U-235</nuclides>
+    <scores>total nu-scatter fission</scores>
+  </tally>
 </tallies>
 """
 
@@ -383,7 +390,7 @@ class OpenMCOrigen(object):
             print("making tape9 for {0} with phi={1}".format(state, phi_tot))
         self.libs['fuel']['material'][-1].density = 10.7
         self.libs['fuel']['material'][-1].atoms_per_molecule = 3.0
-        num_den = self.libs['fuel']['material'][-1].to_atom_dens()
+        num_den = self.libs['fuel']['material'][-1].to_atom_frac()
         for ds in self.xscache.data_sources:
             ds.shield_weights(num_den, self.rc.temperature)
         self.tape9 = origen22.make_tape9(self.rc.track_nucs, self.xscache, nlb=(219, 220, 221))
