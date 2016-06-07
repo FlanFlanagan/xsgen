@@ -82,5 +82,6 @@ class BrightliteWriter(object):
                         for n, f in self.rc.clad_material.comp.items()]
             f.write("\n".join(cladrows))
             f.write("\n")
+        #for tape9 in self.libs['tape9']:
         shutil.copyfile("TAPE9.INP", os.path.join(dirname, "TAPE9.INP"))
 

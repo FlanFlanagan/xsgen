@@ -226,7 +226,7 @@ class OpenMCOrigen(object):
         libs : list of dicts
             Libraries to write out - one for the full fuel and one for each tracked nuclide.
         """
-        self.libs = {'xs': [], 'phi_g': {
+        self.libs = {'xs': [], 'tape9': [], 'phi_g': {
             'E_g': {'EAF': self.eafds.src_group_struct,
                     'OpenMC': self.omcds.src_group_struct},
             'phi_g': []}, 
@@ -381,13 +381,17 @@ class OpenMCOrigen(object):
         """
         if self.rc.verbose:
             print("making tape9 for {0} with phi={1}".format(state, phi_tot))
-        num_den = models.number_density(self.libs['fuel']['material'][0].comp, self.rc.fuel_density, self.libs['fuel']['material'][0].mass)
+        self.libs['fuel']['material'][-1].density = 10.7
+        self.libs['fuel']['material'][-1].atoms_per_molecule = 3.0
+        num_den = self.libs['fuel']['material'][-1].to_atom_dens()
+        print(num_den)
         for ds in self.xscache.data_sources:
             ds.shield_weights(num_den, self.rc.temperature)
         self.tape9 = origen22.make_tape9(self.rc.track_nucs, self.xscache, nlb=(219, 220, 221))
         self.tape9 = origen22.merge_tape9((self.tape9,
                                           origen22.loads_tape9(brightlitetape9)))
         origen22.write_tape9(self.tape9)
+        self.libs['tape9'].append(self.tape9)
         for mat_id in results.keys():
             pwd = self.pwd(state, "origen{}".format(mat_id))
             mat = self.libs[mat_id]["material"][-1]
