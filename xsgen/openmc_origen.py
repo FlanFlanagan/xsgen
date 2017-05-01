@@ -1,4 +1,3 @@
-from __future__ import print_function
 import os
 import shutil
 import json
@@ -161,7 +160,8 @@ class OpenMCOrigen(object):
                          data_source.NullDataSource()]
         for ds in data_sources[:]:
             ds.load(rc.temperature)
-        self.xscache = XSCache(data_sources=data_sources, scalars={922380000: 1.05})
+        self.xscache = XSCache(data_sources=data_sources)
+        #self.xscache = XSCache(data_sources=data_sources, scalars={922380000: 1.05})
         self.xscache.load()
         self.tape9 = None
 
